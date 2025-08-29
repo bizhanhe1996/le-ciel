@@ -1,21 +1,37 @@
 namespace LeCiel;
 
+using LeCiel.Database;
+using Microsoft.EntityFrameworkCore;
+
 public static class Program
 {
+    private static WebApplicationBuilder builder = null!;
+
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
-        ConfigureServices(builder.Services, builder.Configuration);
+        builder = WebApplication.CreateBuilder(args);
+        ConfigureServices();
         var app = builder.Build();
         ConfigureMiddleware(app);
         app.Run();
     }
 
-    private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+    private static void ConfigureServices()
     {
-        services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+        AddAppContext();
+    }
+
+    private static void AddAppContext()
+    {
+        var cs = builder.Configuration.GetConnectionString("Default");
+        builder.Services.AddDbContext<AppContext>(options =>
+        {
+            var serverVersion = ServerVersion.AutoDetect(cs);
+            options.UseMySql(cs, serverVersion);
+        });
     }
 
     private static void ConfigureMiddleware(WebApplication app)
