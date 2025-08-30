@@ -3,6 +3,7 @@ namespace LeCiel;
 using System.Text;
 using LeCiel.Database;
 using LeCiel.Database.Models;
+using LeCiel.Database.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,7 @@ public static class Program
         AddIdentity();
         AddJwtBearer();
         builder.Services.AddAuthorization();
+        builder.Services.AddScoped<ProductsRepository>();
     }
 
     private static void AddJwtBearer()
