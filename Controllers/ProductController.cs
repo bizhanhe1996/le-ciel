@@ -10,6 +10,13 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
 {
     private readonly ProductsRepository _productsRepository = productsRepository;
 
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var products = await _productsRepository.GetAllAsync();
+        return Ok(products);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateAsync(CreateProductRequest createProductRequest)
     {

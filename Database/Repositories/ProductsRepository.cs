@@ -1,4 +1,5 @@
 using LeCiel.Database.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Repositories;
 
@@ -9,6 +10,12 @@ public class ProductsRepository : BaseRepository
     public ProductsRepository(AppContext context)
     {
         _context = context;
+    }
+
+    public async Task<List<Product>> GetAllAsync()
+    {
+        var products = await _context.Products.ToListAsync();
+        return products;
     }
 
     public async Task<Product> CreateAsync(Product product)
