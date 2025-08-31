@@ -1,11 +1,10 @@
+namespace LeCiel.Controllers;
+
 using LeCiel.Database.Repositories;
 using LeCiel.DTOs.Requests.Product;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LeCiel.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
+[ApiController, Route("api/[controller]")]
 public class ProductController(ProductsRepository productsRepository) : BaseController
 {
     private readonly ProductsRepository _productsRepository = productsRepository;
@@ -22,5 +21,19 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     {
         var product = await _productsRepository.CreateAsync(createProductRequest.GetModel());
         return Ok(product);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Show([FromRoute] uint id)
+    {
+        var product = await _productsRepository.FindAsync(id);
+        return Ok(product);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(uint id)
+    {
+        var result = await _productsRepository.DeleteAsync(id);
+        return Ok(result);
     }
 }

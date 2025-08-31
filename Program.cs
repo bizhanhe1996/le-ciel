@@ -37,12 +37,17 @@ public static class Program
     {
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-        AddAppContext();
+        AddSwagger();
+        AddEntity();
         AddIdentity();
         AddJwtBearer();
         builder.Services.AddAuthorization();
         builder.Services.AddScoped<ProductsRepository>();
+    }
+
+    private static void AddSwagger()
+    {
+        builder.Services.AddSwaggerGen();
     }
 
     private static void AddJwtBearer()
@@ -77,7 +82,7 @@ public static class Program
             .AddDefaultTokenProviders();
     }
 
-    private static void AddAppContext()
+    private static void AddEntity()
     {
         var cs = builder.Configuration.GetConnectionString("Default");
         builder.Services.AddDbContext<AppContext>(options =>
@@ -89,14 +94,19 @@ public static class Program
 
     private static void UseMiddlewares()
     {
+        UseSwagger();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseHttpsRedirection();
+        app.MapControllers();
+    }
+
+    private static void UseSwagger()
+    {
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        app.UseAuthentication();
-        app.UseAuthorization();
-        app.UseHttpsRedirection();
-        app.MapControllers();
     }
 }
