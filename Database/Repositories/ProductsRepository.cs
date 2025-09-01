@@ -15,7 +15,7 @@ public class ProductsRepository(AppContext context) : BaseRepository
         return insertedProduct.Entity;
     }
 
-    public async Task<List<Product>> GetAllAsync()
+    public async Task<List<Product>> IndexAsync()
     {
         var products = await _context.Products.ToListAsync();
         return products;

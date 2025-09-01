@@ -12,7 +12,7 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var products = await _productsRepository.GetAllAsync();
+        var products = await _productsRepository.IndexAsync();
         return Ok(products);
     }
 
@@ -24,7 +24,7 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Show([FromRoute] uint id)
+    public async Task<IActionResult> Find([FromRoute] uint id)
     {
         var product = await _productsRepository.FindAsync(id);
         return Ok(product);

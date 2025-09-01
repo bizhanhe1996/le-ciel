@@ -7,7 +7,7 @@ public record UpdateProductRequest : CreateProductRequest
     [Required]
     public uint Id { get; set; }
 
-    public Database.Models.Product GetModel()
+    public override Database.Models.Product GetModel()
     {
         return new Database.Models.Product()
         {

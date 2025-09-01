@@ -14,7 +14,7 @@ public record CreateProductRequest
     [MaxLength(512)]
     public string? Description { get; init; }
 
-    public Database.Models.Product GetModel()
+    public virtual Database.Models.Product GetModel()
     {
         return new Database.Models.Product()
         {
