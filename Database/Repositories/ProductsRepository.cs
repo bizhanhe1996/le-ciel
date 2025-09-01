@@ -1,4 +1,5 @@
 using LeCiel.Database.Models;
+using LeCiel.DTOs.Requests.Product;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Repositories;
@@ -24,6 +25,18 @@ public class ProductsRepository(AppContext context) : BaseRepository
     {
         var product = await _context.Products.FindAsync(id);
         return product;
+    }
+
+    public async Task<bool?> UpdateAsync(uint id, UpdateProductRequest updateProductRequest)
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (product == null)
+        {
+            return false;
+        }
+        _context.Entry(product).CurrentValues.SetValues(updateProductRequest.GetModel());
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<bool> DeleteAsync(uint id)

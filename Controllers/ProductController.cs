@@ -17,7 +17,7 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(CreateProductRequest createProductRequest)
+    public async Task<IActionResult> Create(CreateProductRequest createProductRequest)
     {
         var product = await _productsRepository.CreateAsync(createProductRequest.GetModel());
         return Ok(product);
@@ -30,8 +30,22 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
         return Ok(product);
     }
 
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> Update(
+        [FromRoute] uint id,
+        [FromBody] UpdateProductRequest updateProductRequest
+    )
+    {
+        if (id != updateProductRequest.Id)
+        {
+            return BadRequest("Product ID mismatch.");
+        }
+        var result = await _productsRepository.UpdateAsync(id, updateProductRequest);
+        return Ok(result);
+    }
+
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync(uint id)
+    public async Task<IActionResult> Delete(uint id)
     {
         var result = await _productsRepository.DeleteAsync(id);
         return Ok(result);
