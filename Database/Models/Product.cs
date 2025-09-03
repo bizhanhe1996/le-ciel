@@ -16,7 +16,7 @@ public class Product : BaseModel
     [MaxLength(512)]
     public string? Description { get; set; } = null!;
 
-    public ProductResponseDto GetDTO()
+    public ProductResponseDto GetDto()
     {
         return new ProductResponseDto(
             Id: Id,

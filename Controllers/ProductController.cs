@@ -15,26 +15,27 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     public async Task<IActionResult> Index()
     {
         var products = await _productsRepository.IndexAsync();
-        return Ok(products);
+        var response = new GenericResponse<List<ProductResponseDto>>(
+            true,
+            [.. products.Select(p => p.GetDto())]
+        );
+        return Ok(response);
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductRequest createProductRequest)
     {
         var product = await _productsRepository.CreateAsync(createProductRequest.GetModel());
-        return Ok(product);
+        var response = new GenericResponse<ProductResponseDto>(true, product.GetDto());
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Find([FromRoute] uint id)
     {
         var product = await _productsRepository.FindAsync(id);
-        var productResponse = new GenericResponse<ProductResponseDto>(
-            true,
-            product == null ? "not found" : "found",
-            product?.GetDTO()
-        );
-        return Ok(productResponse);
+        var response = new GenericResponse<ProductResponseDto>(true, product?.GetDto());
+        return Ok(response);
     }
 
     [HttpPatch("{id}")]
@@ -43,18 +44,16 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
         [FromBody] UpdateProductRequest updateProductRequest
     )
     {
-        if (id != updateProductRequest.Id)
-        {
-            return BadRequest("Product ID mismatch.");
-        }
         var result = await _productsRepository.UpdateAsync(id, updateProductRequest);
-        return Ok(result);
+        var reponse = new GenericResponse<ProductResponseDto>(result != null, result?.GetDto());
+        return Ok(reponse);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(uint id)
     {
         var result = await _productsRepository.DeleteAsync(id);
-        return Ok(result);
+        var response = new GenericResponse<ProductResponseDto>(result != null, result?.GetDto());
+        return Ok(response);
     }
 }

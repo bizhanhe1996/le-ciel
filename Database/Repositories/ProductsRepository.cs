@@ -27,27 +27,27 @@ public class ProductsRepository(AppContext context) : BaseRepository
         return product;
     }
 
-    public async Task<bool?> UpdateAsync(uint id, UpdateProductRequest updateProductRequest)
+    public async Task<Product?> UpdateAsync(uint id, UpdateProductRequest updateProductRequest)
     {
         var product = await _context.Products.FindAsync(id);
         if (product == null)
         {
-            return false;
+            return null;
         }
         _context.Entry(product).CurrentValues.SetValues(updateProductRequest.GetModel());
         await _context.SaveChangesAsync();
-        return true;
+        return product;
     }
 
-    public async Task<bool> DeleteAsync(uint id)
+    public async Task<Product?> DeleteAsync(uint id)
     {
         var product = await _context.Products.FindAsync(id);
         if (product == null)
         {
-            return false;
+            return null;
         }
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
-        return true;
+        return product;
     }
 }
