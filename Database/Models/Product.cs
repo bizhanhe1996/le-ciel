@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using LeCiel.DTOs.Responses.Product;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Models;
@@ -14,4 +15,16 @@ public class Product : BaseModel
 
     [MaxLength(512)]
     public string? Description { get; set; } = null!;
+
+    public ProductResponseDto GetDTO()
+    {
+        return new ProductResponseDto(
+            Id: Id,
+            Name: Name,
+            Price: Price,
+            Description: Description,
+            CreatedAt: CreatedAt.ToString(),
+            UpdatedAt: UpdatedAt.ToString()
+        );
+    }
 }

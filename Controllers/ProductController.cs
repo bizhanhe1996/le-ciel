@@ -2,6 +2,8 @@ namespace LeCiel.Controllers;
 
 using LeCiel.Database.Repositories;
 using LeCiel.DTOs.Requests.Product;
+using LeCiel.DTOs.Responses;
+using LeCiel.DTOs.Responses.Product;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController, Route("api/[controller]")]
@@ -27,7 +29,12 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     public async Task<IActionResult> Find([FromRoute] uint id)
     {
         var product = await _productsRepository.FindAsync(id);
-        return Ok(product);
+        var productResponse = new GenericResponse<ProductResponseDto>(
+            true,
+            product == null ? "not found" : "found",
+            product?.GetDTO()
+        );
+        return Ok(productResponse);
     }
 
     [HttpPatch("{id}")]
