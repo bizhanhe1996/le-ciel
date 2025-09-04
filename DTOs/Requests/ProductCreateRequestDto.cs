@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LeCiel.DTOs.Requests.Product;
+namespace LeCiel.DTOs.Requests;
 
-public record CreateProductRequest
+public record ProductCreateRequestDto
 {
     [Required]
     [MaxLength(128)]

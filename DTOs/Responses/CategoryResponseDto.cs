@@ -1,9 +1,8 @@
-namespace LeCiel.DTOs.Responses.Product;
+namespace LeCiel.DTOs.Responses;
 
-public record ProductResponseDto(
+public record CategoryResponseDto(
     uint Id,
     string Name,
-    int Price,
     string? Description,
     string CreatedAt,
     string? UpdatedAt

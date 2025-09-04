@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LeCiel.DTOs.Requests.Product;
+namespace LeCiel.DTOs.Requests;
 
-public record UpdateProductRequest
+public record ProductUpdateRequestDto
 {
     [Required]
     [MaxLength(128)]

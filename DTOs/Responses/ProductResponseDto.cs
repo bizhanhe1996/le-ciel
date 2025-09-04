@@ -1,0 +1,10 @@
+namespace LeCiel.DTOs.Responses;
+
+public record ProductResponseDto(
+    uint Id,
+    string Name,
+    int Price,
+    string? Description,
+    string CreatedAt,
+    string? UpdatedAt
+);

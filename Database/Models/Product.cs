@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using LeCiel.DTOs.Responses.Product;
+using LeCiel.DTOs.Responses;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Models;
@@ -29,8 +29,8 @@ public class Product : BaseModel
             Name: Name,
             Price: Price,
             Description: Description,
-            CreatedAt: CreatedAt.ToString(),
-            UpdatedAt: UpdatedAt.ToString()
+            CreatedAt: CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
+            UpdatedAt: UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss")
         );
     }
 }

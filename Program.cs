@@ -43,6 +43,7 @@ public static class Program
         AddJwtBearer();
         builder.Services.AddAuthorization();
         builder.Services.AddScoped<ProductsRepository>();
+        builder.Services.AddScoped<CategoriesRepository>();
     }
 
     private static void AddSwagger()

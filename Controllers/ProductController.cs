@@ -1,15 +1,24 @@
 namespace LeCiel.Controllers;
 
 using LeCiel.Database.Repositories;
-using LeCiel.DTOs.Requests.Product;
+using LeCiel.DTOs.Requests;
 using LeCiel.DTOs.Responses;
-using LeCiel.DTOs.Responses.Product;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController, Route("api/[controller]")]
 public class ProductController(ProductsRepository productsRepository) : BaseController
 {
     private readonly ProductsRepository _productsRepository = productsRepository;
+
+    [HttpPost]
+    public async Task<IActionResult> Create(ProductCreateRequestDto productCreateRequestDto)
+    {
+        var insertedProduct = await _productsRepository.CreateAsync(
+            productCreateRequestDto.GetModel()
+        );
+        var response = new GenericResponse<ProductResponseDto>(true, insertedProduct.GetDto());
+        return Ok(response);
+    }
 
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -19,14 +28,6 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
             true,
             [.. products.Select(p => p.GetDto())]
         );
-        return Ok(response);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateProductRequest createProductRequest)
-    {
-        var product = await _productsRepository.CreateAsync(createProductRequest.GetModel());
-        var response = new GenericResponse<ProductResponseDto>(true, product.GetDto());
         return Ok(response);
     }
 
@@ -41,10 +42,10 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     [HttpPatch("{id}")]
     public async Task<IActionResult> Update(
         [FromRoute] uint id,
-        [FromBody] UpdateProductRequest updateProductRequest
+        [FromBody] ProductUpdateRequestDto productUpdateRequestDto
     )
     {
-        var result = await _productsRepository.UpdateAsync(id, updateProductRequest);
+        var result = await _productsRepository.UpdateAsync(id, productUpdateRequestDto);
         var reponse = new GenericResponse<ProductResponseDto>(result != null, result?.GetDto());
         return Ok(reponse);
     }
