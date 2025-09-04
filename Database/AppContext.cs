@@ -10,6 +10,7 @@ public class AppContext : IdentityDbContext<User>
         : base(options) { }
 
     public DbSet<Product> Products { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     public override int SaveChanges()
     {
@@ -23,24 +24,33 @@ public class AppContext : IdentityDbContext<User>
         return base.SaveChangesAsync(cancellationToken);
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder
+            .Entity<Category>()
+            .HasMany(c => c.Products)
+            .WithOne(p => p.Category)
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.SetNull);
+        base.OnModelCreating(modelBuilder);
+    }
+
     private void UpdateTimestamps()
     {
+        var targetStates = new[] { EntityState.Modified, EntityState.Added };
         var entries = ChangeTracker
             .Entries()
-            .Where(e =>
-                e.Entity is Product
-                && (e.State == EntityState.Modified || e.State == EntityState.Added)
-            );
+            .Where(e => e.Entity is BaseModel && targetStates.Contains(e.State));
 
         foreach (var entityEntry in entries)
         {
             if (entityEntry.State == EntityState.Added)
             {
-                ((Product)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+                ((BaseModel)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
             }
             else if (entityEntry.State == EntityState.Modified)
             {
-                ((Product)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
+                ((BaseModel)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
             }
         }
     }

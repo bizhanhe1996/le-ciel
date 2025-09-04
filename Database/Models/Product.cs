@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using LeCiel.DTOs.Responses.Product;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,11 @@ public class Product : BaseModel
 {
     [Required, MaxLength(128)]
     public string Name { get; set; } = null!;
+
+    public uint? CategoryId { get; set; }
+
+    [NotMapped]
+    public Category? Category { get; set; }
 
     [Required]
     public int Price { get; set; } = 0;
