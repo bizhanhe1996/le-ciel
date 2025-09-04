@@ -34,7 +34,19 @@ public class ProductsRepository(AppContext context) : BaseRepository
         {
             return null;
         }
-        _context.Entry(product).CurrentValues.SetValues(updateProductRequest.GetModel());
+        if (updateProductRequest.Name != null)
+        {
+            product.Name = updateProductRequest.Name;
+        }
+        if (updateProductRequest.Price != null)
+        {
+            product.Price = (int)updateProductRequest.Price;
+        }
+        if (updateProductRequest.Description != null)
+        {
+            product.Description = updateProductRequest.Description;
+        }
+
         await _context.SaveChangesAsync();
         return product;
     }

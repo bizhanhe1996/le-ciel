@@ -2,19 +2,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LeCiel.DTOs.Requests.Product;
 
-public record UpdateProductRequest : CreateProductRequest
+public record UpdateProductRequest
 {
     [Required]
-    public uint Id { get; set; }
+    [MaxLength(128)]
+    public string? Name { get; set; }
 
-    public override Database.Models.Product GetModel()
-    {
-        return new Database.Models.Product()
-        {
-            Id = Id,
-            Name = Name,
-            Price = Price,
-            Description = Description,
-        };
-    }
+    [Required]
+    public int? Price { get; set; }
+
+    [MaxLength(512)]
+    public string? Description { get; init; }
 }
