@@ -16,7 +16,10 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
         var insertedProduct = await _productsRepository.CreateAsync(
             productCreateRequestDto.GetModel()
         );
-        var response = new GenericResponse<ProductResponseDto>(true, insertedProduct.GetDto());
+        var response = new GenericResponse<ProductResponseDto>(
+            insertedProduct != null,
+            insertedProduct?.GetDto()
+        );
         return Ok(response);
     }
 
@@ -35,7 +38,7 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     public async Task<IActionResult> Find([FromRoute] uint id)
     {
         var product = await _productsRepository.FindAsync(id);
-        var response = new GenericResponse<ProductResponseDto>(true, product?.GetDto());
+        var response = new GenericResponse<ProductResponseDto>(product != null, product?.GetDto());
         return Ok(response);
     }
 

@@ -14,7 +14,7 @@ public record ProductCreateRequestDto
     [MaxLength(512)]
     public string? Description { get; init; }
 
-    public int? CategoryId { get; init; }
+    public uint? CategoryId { get; init; }
 
     public virtual Database.Models.Product GetModel()
     {
@@ -23,6 +23,7 @@ public record ProductCreateRequestDto
             Name = Name,
             Price = Price,
             Description = Description,
+            CategoryId = CategoryId,
         };
     }
 }

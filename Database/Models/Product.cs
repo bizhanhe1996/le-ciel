@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using LeCiel.DTOs.Responses;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +27,7 @@ public class Product : BaseModel
             Name: Name,
             Price: Price,
             Description: Description,
+            Category: Category?.GetDto(),
             CreatedAt: CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
             UpdatedAt: UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss")
         );

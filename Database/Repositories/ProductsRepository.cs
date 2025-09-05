@@ -8,22 +8,25 @@ public class ProductsRepository(AppContext context) : BaseRepository
 {
     private readonly AppContext _context = context;
 
-    public async Task<Product> CreateAsync(Product product)
+    public async Task<Product?> CreateAsync(Product product)
     {
-        var insertedProduct = _context.Products.Add(product);
+        var insertionResult = _context.Products.Add(product);
         await _context.SaveChangesAsync();
-        return insertedProduct.Entity;
+        insertionResult.Entity.Category = await _context.Categories.FindAsync(product.CategoryId);
+        return insertionResult.Entity;
     }
 
     public async Task<List<Product>> IndexAsync()
     {
-        var products = await _context.Products.ToListAsync();
+        var products = await _context.Products.Include(p => p.Category).ToListAsync();
         return products;
     }
 
     public async Task<Product?> FindAsync(uint id)
     {
-        var product = await _context.Products.FindAsync(id);
+        var product = await _context
+            .Products.Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == id);
         return product;
     }
 
@@ -34,11 +37,11 @@ public class ProductsRepository(AppContext context) : BaseRepository
         {
             return null;
         }
-
         product.Name = dto.Name ?? product.Name;
         product.Price = dto.Price ?? product.Price;
         product.Description = dto.Description ?? product.Description;
-
+        product.CategoryId = dto.CategoryId ?? product.CategoryId;
+        product.Category = await _context.Categories.FindAsync(product.CategoryId);
         await _context.SaveChangesAsync();
         return product;
     }
@@ -50,6 +53,7 @@ public class ProductsRepository(AppContext context) : BaseRepository
         {
             return null;
         }
+        product.Category = await _context.Categories.FindAsync(product.CategoryId);
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
         return product;

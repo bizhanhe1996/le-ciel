@@ -1,3 +1,5 @@
+using LeCiel.Database.Models;
+
 namespace LeCiel.DTOs.Responses;
 
 public record ProductResponseDto(
@@ -5,6 +7,7 @@ public record ProductResponseDto(
     string Name,
     int Price,
     string? Description,
+    CategoryResponseDto? Category,
     string CreatedAt,
     string? UpdatedAt
 );
