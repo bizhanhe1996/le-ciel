@@ -13,7 +13,6 @@ public class Product : BaseModel
 
     public uint? CategoryId { get; set; }
 
-    [NotMapped]
     public Category? Category { get; set; }
 
     [Required]

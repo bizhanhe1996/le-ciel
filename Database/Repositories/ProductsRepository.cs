@@ -27,28 +27,17 @@ public class ProductsRepository(AppContext context) : BaseRepository
         return product;
     }
 
-    public async Task<Product?> UpdateAsync(
-        uint id,
-        ProductUpdateRequestDto productUpdateRequestDto
-    )
+    public async Task<Product?> UpdateAsync(uint id, ProductUpdateRequestDto dto)
     {
         var product = await _context.Products.FindAsync(id);
         if (product == null)
         {
             return null;
         }
-        if (productUpdateRequestDto.Name != null)
-        {
-            product.Name = productUpdateRequestDto.Name;
-        }
-        if (productUpdateRequestDto.Price != null)
-        {
-            product.Price = (int)productUpdateRequestDto.Price;
-        }
-        if (productUpdateRequestDto.Description != null)
-        {
-            product.Description = productUpdateRequestDto.Description;
-        }
+
+        product.Name = dto.Name ?? product.Name;
+        product.Price = dto.Price ?? product.Price;
+        product.Description = dto.Description ?? product.Description;
 
         await _context.SaveChangesAsync();
         return product;

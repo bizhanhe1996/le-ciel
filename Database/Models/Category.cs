@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using LeCiel.DTOs.Responses;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,8 +13,7 @@ public class Category : BaseModel
     [MaxLength(512)]
     public string? Description { get; set; }
 
-    [NotMapped]
-    public ICollection<Product> Products { get; set; } = null!;
+    public ICollection<Product> Products { get; set; } = [];
 
     public CategoryResponseDto GetDto()
     {
