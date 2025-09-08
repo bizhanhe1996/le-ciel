@@ -24,9 +24,12 @@ public class ProductsRepository(AppContext context) : BaseRepository
 
     public async Task<Product?> FindAsync(uint id)
     {
-        var product = await _context
-            .Products.Include(p => p.Category)
-            .FirstOrDefaultAsync(p => p.Id == id);
+        var product = await _context.Products.FindAsync(id);
+        if (product == null)
+        {
+            return null;
+        }
+        product.Category = await _context.Categories.FindAsync(product.CategoryId);
         return product;
     }
 

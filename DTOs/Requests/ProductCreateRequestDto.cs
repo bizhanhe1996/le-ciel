@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using LeCiel.Extras.Attributes;
 
 namespace LeCiel.DTOs.Requests;
 
@@ -14,6 +15,7 @@ public record ProductCreateRequestDto
     [MaxLength(512)]
     public string? Description { get; init; }
 
+    [CategoryExistsAttribute]
     public uint? CategoryId { get; init; }
 
     public virtual Database.Models.Product GetModel()
