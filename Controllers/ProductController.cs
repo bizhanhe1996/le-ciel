@@ -1,9 +1,9 @@
-namespace LeCiel.Controllers;
-
 using LeCiel.Database.Repositories;
 using LeCiel.DTOs.Requests;
 using LeCiel.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
+
+namespace LeCiel.Controllers;
 
 [ApiController, Route("api/[controller]")]
 public class ProductController(ProductsRepository productsRepository) : BaseController

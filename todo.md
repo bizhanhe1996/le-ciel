@@ -1,1 +1,5 @@
-- Create Product: What if category Id does not exists!
+- add depth to categories
+- add tags
+- add users
+- add authorizae and authenticate
+- add SwaggerUI Annotations

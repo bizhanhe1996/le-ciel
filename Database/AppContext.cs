@@ -11,6 +11,7 @@ public class AppContext : IdentityDbContext<User>
 
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<Tag> Tags { get; set; }
 
     public override int SaveChanges()
     {

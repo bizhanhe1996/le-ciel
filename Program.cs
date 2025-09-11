@@ -44,6 +44,7 @@ public static class Program
         builder.Services.AddAuthorization();
         builder.Services.AddScoped<ProductsRepository>();
         builder.Services.AddScoped<CategoriesRepository>();
+        builder.Services.AddScoped<TagsRepository>();
     }
 
     private static void AddSwagger()

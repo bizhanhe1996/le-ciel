@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Repositories;
 
-public class CategoriesRepository(AppContext context)
+public class CategoriesRepository(AppContext context) : BaseRepository
 {
     private readonly AppContext _context = context;
 
