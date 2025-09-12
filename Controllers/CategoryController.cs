@@ -41,7 +41,7 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     public async Task<IActionResult> Find([FromRoute] int id)
     {
         var category = await _categoriesRepository.FindAsync((uint)id);
-        var response = new GenericResponse<CategoryResponseDto>(
+        var response = new GenericResponse<CategoryResponseDto?>(
             category != null,
             category?.GetDto()
         );
@@ -55,7 +55,7 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     )
     {
         var result = await _categoriesRepository.UpdateAsync(id, categoryUpdateRequestDto);
-        var response = new GenericResponse<CategoryResponseDto>(result != null, result?.GetDto());
+        var response = new GenericResponse<CategoryResponseDto?>(result != null, result?.GetDto());
         return Ok(response);
     }
 

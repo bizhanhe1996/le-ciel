@@ -56,9 +56,10 @@ public class ProductsRepository(AppContext context) : BaseRepository
         {
             return null;
         }
-        product.Category = await _context.Categories.FindAsync(product.CategoryId);
-        _context.Products.Remove(product);
+        var category = await _context.Categories.FindAsync(product.CategoryId);
+        var result = _context.Products.Remove(product);
         await _context.SaveChangesAsync();
-        return product;
+        result.Entity.Category = category;
+        return result.Entity;
     }
 }

@@ -38,7 +38,7 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     public async Task<IActionResult> Find([FromRoute] uint id)
     {
         var product = await _productsRepository.FindAsync(id);
-        var response = new GenericResponse<ProductResponseDto>(product != null, product?.GetDto());
+        var response = new GenericResponse<ProductResponseDto?>(product != null, product?.GetDto());
         return Ok(response);
     }
 
@@ -49,7 +49,7 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     )
     {
         var result = await _productsRepository.UpdateAsync(id, productUpdateRequestDto);
-        var reponse = new GenericResponse<ProductResponseDto>(result != null, result?.GetDto());
+        var reponse = new GenericResponse<ProductResponseDto?>(result != null, result?.GetDto());
         return Ok(reponse);
     }
 
@@ -57,7 +57,7 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     public async Task<IActionResult> Delete(uint id)
     {
         var result = await _productsRepository.DeleteAsync(id);
-        var response = new GenericResponse<ProductResponseDto>(result != null, result?.GetDto());
+        var response = new GenericResponse<ProductResponseDto?>(result != null, result?.GetDto());
         return Ok(response);
     }
 }

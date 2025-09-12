@@ -10,11 +10,15 @@ public class Tag : BaseModel
     [Required, MaxLength(128)]
     public required string Name { get; set; }
 
+    [MaxLength(512)]
+    public string? Description { get; set; }
+
     public TagResponseDto GetDto()
     {
         return new TagResponseDto(
             Id: Id,
             Name: Name,
+            Description: Description,
             CreatedAt: CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
             UpdatedAt: UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss")
         );

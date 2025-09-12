@@ -8,8 +8,11 @@ public record TagCreateRequestDto
     [Required, MaxLength(128)]
     public required string Name { get; init; }
 
+    [MaxLength(512)]
+    public string? Description { get; init; }
+
     public Tag GetModel()
     {
-        return new Tag() { Name = Name };
+        return new Tag() { Name = Name, Description = Description };
     }
 }
