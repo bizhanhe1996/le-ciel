@@ -4,11 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database;
 
-public class AppContext : IdentityDbContext<User>
+public class AppContext(DbContextOptions<AppContext> options) : IdentityDbContext<User>(options)
 {
-    public AppContext(DbContextOptions<AppContext> options)
-        : base(options) { }
-
+    // DbSets
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Tag> Tags { get; set; }
@@ -27,13 +25,29 @@ public class AppContext : IdentityDbContext<User>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        ProductCategoryOneToMany(modelBuilder);
+        ProductTagManyToMany(modelBuilder);
+
+        base.OnModelCreating(modelBuilder);
+    }
+
+    private static void ProductTagManyToMany(ModelBuilder modelBuilder)
+    {
+        modelBuilder
+            .Entity<Product>()
+            .HasMany(p => p.Tags)
+            .WithMany(t => t.Products)
+            .UsingEntity(j => j.ToTable("ProductTags"));
+    }
+
+    private static void ProductCategoryOneToMany(ModelBuilder modelBuilder)
+    {
         modelBuilder
             .Entity<Category>()
             .HasMany(c => c.Products)
             .WithOne(p => p.Category)
             .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.SetNull);
-        base.OnModelCreating(modelBuilder);
     }
 
     private void UpdateTimestamps()

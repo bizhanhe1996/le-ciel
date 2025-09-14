@@ -13,6 +13,9 @@ public class Tag : BaseModel
     [MaxLength(512)]
     public string? Description { get; set; }
 
+    // Navigation property
+    public ICollection<Product> Products { get; set; } = [];
+
     public TagResponseDto GetDto()
     {
         return new TagResponseDto(

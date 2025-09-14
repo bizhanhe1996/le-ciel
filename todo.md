@@ -1,5 +1,7 @@
+- add count of products for each category
+- add count of products for each tag
+- add many2many relationship to tag and product
 - add depth to categories
-- add tags
 - add users
 - add authorizae and authenticate
 - add SwaggerUI Annotations
