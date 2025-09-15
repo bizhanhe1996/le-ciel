@@ -10,9 +10,17 @@ public class ProductsRepository(AppContext context) : BaseRepository
 
     public async Task<Product?> CreateAsync(Product product)
     {
+        if (product.TagsIds != null && product.TagsIds.Length > 0)
+        {
+            var tags = await _context.Tags.Where(t => product.TagsIds.Contains(t.Id)).ToListAsync();
+            product.Tags = tags;
+        }
+
         var insertionResult = _context.Products.Add(product);
         await _context.SaveChangesAsync();
+
         insertionResult.Entity.Category = await _context.Categories.FindAsync(product.CategoryId);
+        insertionResult.Entity.Tags = product.Tags;
         return insertionResult.Entity;
     }
 
@@ -45,6 +53,9 @@ public class ProductsRepository(AppContext context) : BaseRepository
         product.Description = dto.Description ?? product.Description;
         product.CategoryId = dto.CategoryId ?? product.CategoryId;
         product.Category = await _context.Categories.FindAsync(product.CategoryId);
+
+        var tags = _context.Tags.Where(t => product.TagsIds.Contains(t.Id)).ToList();
+        product.Tags = tags;
         await _context.SaveChangesAsync();
         return product;
     }

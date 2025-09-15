@@ -15,4 +15,7 @@ public record ProductUpdateRequestDto
 
     [CategoryExistsAttribute]
     public uint? CategoryId { get; init; }
+
+    [TagIdsExistAttribute]
+    public uint[]? TagsIds { get; init; }
 }

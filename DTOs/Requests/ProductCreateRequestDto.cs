@@ -18,6 +18,9 @@ public record ProductCreateRequestDto
     [CategoryExistsAttribute]
     public uint? CategoryId { get; init; }
 
+    [TagIdsExistAttribute]
+    public uint[]? TagsIds { get; init; }
+
     public virtual Database.Models.Product GetModel()
     {
         return new Database.Models.Product()
@@ -26,6 +29,7 @@ public record ProductCreateRequestDto
             Price = Price,
             Description = Description,
             CategoryId = CategoryId,
+            TagsIds = TagsIds,
         };
     }
 }

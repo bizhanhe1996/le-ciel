@@ -8,6 +8,7 @@ public record ProductResponseDto(
     int Price,
     string? Description,
     CategoryResponseDto? Category,
+    ICollection<TagResponseDto>? Tags,
     string CreatedAt,
     string? UpdatedAt
 );

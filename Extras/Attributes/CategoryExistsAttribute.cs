@@ -12,11 +12,7 @@ public class CategoryExistsAttribute : ValidationAttribute
             return ValidationResult.Success;
 
         SetAppContext(validationContext);
-        if (appContext == null)
-        {
-            throw new Exception("AppContext not available.");
-        }
-        var category = appContext.Categories.Find((uint)value);
+        var category = appContext?.Categories.Find((uint)value);
 
         return category != null
             ? ValidationResult.Success

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using LeCiel.DTOs.Responses;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,9 @@ public class Product : BaseModel
     [MaxLength(512)]
     public string? Description { get; set; } = null!;
 
-    // Navigation properties
+    [NotMapped]
+    public uint[]? TagsIds { get; set; }
+
     public ICollection<Tag> Tags { get; set; } = [];
 
     public ProductResponseDto GetDto()
@@ -31,6 +34,7 @@ public class Product : BaseModel
             Price: Price,
             Description: Description,
             Category: Category?.GetDto(),
+            Tags: [.. Tags.Select(t => t.GetDto())],
             CreatedAt: CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
             UpdatedAt: UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss")
         );

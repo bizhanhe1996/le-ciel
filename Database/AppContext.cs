@@ -37,7 +37,11 @@ public class AppContext(DbContextOptions<AppContext> options) : IdentityDbContex
             .Entity<Product>()
             .HasMany(p => p.Tags)
             .WithMany(t => t.Products)
-            .UsingEntity(j => j.ToTable("ProductTags"));
+            .UsingEntity<Dictionary<string, object>>(
+                "ProductTags",
+                j => j.HasOne<Tag>().WithMany().HasForeignKey("TagId"),
+                j => j.HasOne<Product>().WithMany().HasForeignKey("ProductId")
+            );
     }
 
     private static void ProductCategoryOneToMany(ModelBuilder modelBuilder)
