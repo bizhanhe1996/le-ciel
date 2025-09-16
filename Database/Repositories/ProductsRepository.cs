@@ -13,6 +13,7 @@ public class ProductsRepository(AppContext context) : BaseRepository
         if (product.TagsIds != null && product.TagsIds.Length > 0)
         {
             var tags = await _context.Tags.Where(t => product.TagsIds.Contains(t.Id)).ToListAsync();
+            product.Tags.Clear();
             product.Tags = tags;
         }
 
@@ -43,7 +44,9 @@ public class ProductsRepository(AppContext context) : BaseRepository
 
     public async Task<Product?> UpdateAsync(uint id, ProductUpdateRequestDto dto)
     {
-        var product = await _context.Products.FindAsync(id);
+        var product = await _context
+            .Products.Include(p => p.Tags)
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (product == null)
         {
             return null;
@@ -52,10 +55,10 @@ public class ProductsRepository(AppContext context) : BaseRepository
         product.Price = dto.Price ?? product.Price;
         product.Description = dto.Description ?? product.Description;
         product.CategoryId = dto.CategoryId ?? product.CategoryId;
-        product.Category = await _context.Categories.FindAsync(product.CategoryId);
-
-        var tags = _context.Tags.Where(t => product.TagsIds.Contains(t.Id)).ToList();
-        product.Tags = tags;
+        if (dto.TagsIds != null)
+        {
+            product.Tags = await _context.Tags.Where(t => dto.TagsIds.Contains(t.Id)).ToListAsync();
+        }
         await _context.SaveChangesAsync();
         return product;
     }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using LeCiel.Database.Models;
 using LeCiel.Extras.Attributes;
 
 namespace LeCiel.DTOs.Requests;
@@ -18,4 +19,5 @@ public record ProductUpdateRequestDto
 
     [TagIdsExistAttribute]
     public uint[]? TagsIds { get; init; }
+
 }
