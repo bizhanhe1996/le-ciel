@@ -57,7 +57,10 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     public async Task<IActionResult> Delete(uint id)
     {
         var result = await _productsRepository.DeleteAsync(id);
-        var response = new GenericResponse<ProductResponseDto?>(result != null, result?.GetDto());
+        var response = new GenericResponse<ProductResponseDto?>(
+            result is not null,
+            result?.GetDto()
+        );
         return Ok(response);
     }
 }

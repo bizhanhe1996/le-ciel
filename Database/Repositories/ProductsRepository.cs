@@ -10,35 +10,37 @@ public class ProductsRepository(AppContext context) : BaseRepository
 
     public async Task<Product?> CreateAsync(Product product)
     {
-        if (product.TagsIds != null && product.TagsIds.Length > 0)
+        if (product.TagsIds is not null)
         {
-            var tags = await _context.Tags.Where(t => product.TagsIds.Contains(t.Id)).ToListAsync();
-            product.Tags.Clear();
-            product.Tags = tags;
+            product.Tags = await _context
+                .Tags.Where(t => product.TagsIds.Contains(t.Id))
+                .ToListAsync();
+            ;
         }
-
         var insertionResult = _context.Products.Add(product);
         await _context.SaveChangesAsync();
-
-        insertionResult.Entity.Category = await _context.Categories.FindAsync(product.CategoryId);
-        insertionResult.Entity.Tags = product.Tags;
         return insertionResult.Entity;
     }
 
     public async Task<List<Product>> IndexAsync()
     {
-        var products = await _context.Products.Include(p => p.Category).ToListAsync();
+        var products = await _context
+            .Products.Include(p => p.Category)
+            .Include(p => p.Tags)
+            .ToListAsync();
         return products;
     }
 
     public async Task<Product?> FindAsync(uint id)
     {
-        var product = await _context.Products.FindAsync(id);
+        var product = await _context
+            .Products.Include(p => p.Category)
+            .Include(p => p.Tags)
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (product == null)
         {
             return null;
         }
-        product.Category = await _context.Categories.FindAsync(product.CategoryId);
         return product;
     }
 
@@ -55,7 +57,7 @@ public class ProductsRepository(AppContext context) : BaseRepository
         product.Price = dto.Price ?? product.Price;
         product.Description = dto.Description ?? product.Description;
         product.CategoryId = dto.CategoryId ?? product.CategoryId;
-        if (dto.TagsIds != null)
+        if (dto.TagsIds is not null)
         {
             product.Tags = await _context.Tags.Where(t => dto.TagsIds.Contains(t.Id)).ToListAsync();
         }
@@ -70,10 +72,8 @@ public class ProductsRepository(AppContext context) : BaseRepository
         {
             return null;
         }
-        var category = await _context.Categories.FindAsync(product.CategoryId);
         var result = _context.Products.Remove(product);
         await _context.SaveChangesAsync();
-        result.Entity.Category = category;
         return result.Entity;
     }
 }
