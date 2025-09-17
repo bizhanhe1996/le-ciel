@@ -2,6 +2,7 @@ using LeCiel.Database.Repositories;
 using LeCiel.DTOs.Requests;
 using LeCiel.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace LeCiel.Controllers;
 
@@ -49,10 +50,21 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(uint id)
+    public async Task<IActionResult> Delete([FromRoute] uint id)
     {
         var result = await _tagsRepository.DeleteAsync(id);
         var response = new GenericResponse<TagResponseDto?>(result != null, result?.GetDto());
+        return Ok(response);
+    }
+
+    [HttpGet("/products/{id}")]
+    public async Task<IActionResult> Products([FromRoute] uint id)
+    {
+        var products = await _tagsRepository.ProductsAsync(id);
+        var response = new GenericResponse<List<ProductResponseDto>?>(
+            products is not null,
+            products?.Select(p => p.GetDto()).ToList()
+        );
         return Ok(response);
     }
 }

@@ -51,4 +51,16 @@ public class TagsRepository(AppContext context) : BaseRepository
         await _context.SaveChangesAsync();
         return result.Entity;
     }
+
+    public async Task<ICollection<Product>?> ProductsAsync(uint tagId)
+    {
+        var tag = await _context
+            .Tags.Include(t => t.Products)
+            .FirstOrDefaultAsync(t => t.Id == tagId);
+        if (tag == null)
+        {
+            return null;
+        }
+        return tag.Products;
+    }
 }

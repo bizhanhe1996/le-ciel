@@ -23,8 +23,8 @@ public class CategoriesRepository(AppContext context) : BaseRepository
 
     public async Task<Category?> FindAsync(uint id)
     {
-        var result = await _context.Categories.FindAsync(id);
-        return result;
+        var category = await _context.Categories.FindAsync(id);
+        return category;
     }
 
     public async Task<Category?> UpdateAsync(int id, CategoryUpdateRequestDto dto)
