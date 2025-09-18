@@ -15,9 +15,9 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     public async Task<IActionResult> Create([FromBody] TagCreateRequestDto dto)
     {
         var insertedTag = await _tagsRepository.CreateAsync(dto.GetModel());
-        var response = new GenericResponse<TagResponseDto>(
+        var response = new GenericResponse<TagResponseSimpleDto>(
             insertedTag != null,
-            insertedTag?.GetDto()
+            insertedTag?.GetSimpleDto()
         );
         return Ok(response);
     }
@@ -26,9 +26,9 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     public async Task<IActionResult> Index()
     {
         var tags = await _tagsRepository.IndexAsync();
-        var response = new GenericResponse<List<TagResponseDto>?>(
+        var response = new GenericResponse<List<TagResponseSimpleDto>?>(
             true,
-            [.. tags.Select(t => t.GetDto())]
+            [.. tags.Select(t => t.GetSimpleDto())]
         );
         return Ok(response);
     }
@@ -37,7 +37,10 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     public async Task<IActionResult> Find([FromRoute] uint id)
     {
         var result = await _tagsRepository.FindAsync(id);
-        var response = new GenericResponse<TagResponseDto?>(result != null, result?.GetDto());
+        var response = new GenericResponse<TagResponseSimpleDto?>(
+            result != null,
+            result?.GetSimpleDto()
+        );
         return Ok(response);
     }
 
@@ -45,7 +48,10 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     public async Task<IActionResult> Update([FromRoute] uint id, [FromBody] TagUpdateRequestDto dto)
     {
         var result = await _tagsRepository.UpdateAsync(id, dto);
-        var response = new GenericResponse<TagResponseDto?>(result != null, result?.GetDto());
+        var response = new GenericResponse<TagResponseSimpleDto?>(
+            result != null,
+            result?.GetSimpleDto()
+        );
         return Ok(response);
     }
 
@@ -53,7 +59,10 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     public async Task<IActionResult> Delete([FromRoute] uint id)
     {
         var result = await _tagsRepository.DeleteAsync(id);
-        var response = new GenericResponse<TagResponseDto?>(result != null, result?.GetDto());
+        var response = new GenericResponse<TagResponseSimpleDto?>(
+            result != null,
+            result?.GetSimpleDto()
+        );
         return Ok(response);
     }
 
@@ -61,9 +70,9 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     public async Task<IActionResult> Products([FromRoute] uint id)
     {
         var products = await _tagsRepository.ProductsAsync(id);
-        var response = new GenericResponse<List<ProductResponseDto>?>(
+        var response = new GenericResponse<List<ProductResponseSimpleDto>?>(
             products is not null,
-            products?.Select(p => p.GetDto()).ToList()
+            products?.Select(p => p.GetSimpleDto()).ToList()
         );
         return Ok(response);
     }

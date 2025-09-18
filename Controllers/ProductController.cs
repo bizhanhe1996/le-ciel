@@ -16,9 +16,9 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
         var insertedProduct = await _productsRepository.CreateAsync(
             productCreateRequestDto.GetModel()
         );
-        var response = new GenericResponse<ProductResponseDto>(
+        var response = new GenericResponse<ProductResponseSimpleDto>(
             insertedProduct != null,
-            insertedProduct?.GetDto()
+            insertedProduct?.GetSimpleDto()
         );
         return Ok(response);
     }
@@ -27,9 +27,9 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     public async Task<IActionResult> Index()
     {
         var products = await _productsRepository.IndexAsync();
-        var response = new GenericResponse<List<ProductResponseDto>>(
+        var response = new GenericResponse<List<ProductResponseSimpleDto>>(
             true,
-            [.. products.Select(p => p.GetDto())]
+            [.. products.Select(p => p.GetSimpleDto())]
         );
         return Ok(response);
     }
@@ -38,7 +38,10 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     public async Task<IActionResult> Find([FromRoute] uint id)
     {
         var product = await _productsRepository.FindAsync(id);
-        var response = new GenericResponse<ProductResponseDto?>(product != null, product?.GetDto());
+        var response = new GenericResponse<ProductResponseSimpleDto?>(
+            product != null,
+            product?.GetSimpleDto()
+        );
         return Ok(response);
     }
 
@@ -49,7 +52,10 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     )
     {
         var result = await _productsRepository.UpdateAsync(id, productUpdateRequestDto);
-        var reponse = new GenericResponse<ProductResponseDto?>(result != null, result?.GetDto());
+        var reponse = new GenericResponse<ProductResponseSimpleDto?>(
+            result != null,
+            result?.GetSimpleDto()
+        );
         return Ok(reponse);
     }
 
@@ -57,9 +63,9 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     public async Task<IActionResult> Delete(uint id)
     {
         var result = await _productsRepository.DeleteAsync(id);
-        var response = new GenericResponse<ProductResponseDto?>(
+        var response = new GenericResponse<ProductResponseSimpleDto?>(
             result is not null,
-            result?.GetDto()
+            result?.GetSimpleDto()
         );
         return Ok(response);
     }

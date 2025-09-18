@@ -13,17 +13,30 @@ public class Tag : BaseModel
     [MaxLength(512)]
     public string? Description { get; set; }
 
-    // Navigation property
     public ICollection<Product> Products { get; set; } = [];
 
-    public TagResponseDto GetDto()
+    public TagResponseSimpleDto GetSimpleDto()
     {
-        return new TagResponseDto(
-            Id: Id,
-            Name: Name,
-            Description: Description,
-            CreatedAt: CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
-            UpdatedAt: UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss")
-        );
+        return new TagResponseSimpleDto
+        {
+            Id = Id,
+            Name = Name,
+            Description = Description,
+            CreatedAt = CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
+            UpdatedAt = UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss"),
+        };
+    }
+
+    public TagResponseFullDto GetFullDto()
+    {
+        return new TagResponseFullDto
+        {
+            Id = Id,
+            Name = Name,
+            Description = Description,
+            Products = [.. Products.Select(p => p.GetSimpleDto())],
+            CreatedAt = CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
+            UpdatedAt = UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss"),
+        };
     }
 }

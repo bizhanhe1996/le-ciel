@@ -1,5 +1,4 @@
-- add count of products for each category
-- add count of products for each tag
+- add Simple and Full version of ResponseDTOs to prevent circular reference
 - add many2many relationship to tag and product
 - add depth to categories
 - add users

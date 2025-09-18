@@ -1,6 +1,6 @@
 namespace LeCiel.DTOs.Responses;
 
-public record TagResponseSimpleDto
+public record CategoryResponseSimpleDto
 {
     public uint Id { get; init; }
     public string Name { get; init; } = null!;

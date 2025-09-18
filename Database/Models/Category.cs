@@ -15,14 +15,28 @@ public class Category : BaseModel
 
     public ICollection<Product> Products { get; set; } = [];
 
-    public CategoryResponseDto GetDto()
+    public CategoryResponseSimpleDto GetSimpleDto()
     {
-        return new CategoryResponseDto(
-            Id: Id,
-            Name: Name,
-            Description: Description,
-            CreatedAt: CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
-            UpdatedAt: UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss")
-        );
+        return new CategoryResponseSimpleDto
+        {
+            Id = Id,
+            Name = Name,
+            Description = Description,
+            CreatedAt = CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
+            UpdatedAt = UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss"),
+        };
+    }
+
+    public CategoryResponseFullDto GetFullDto()
+    {
+        return new CategoryResponseFullDto
+        {
+            Id = Id,
+            Name = Name,
+            Description = Description,
+            Products = [.. Products.Select(p => p.GetSimpleDto())],
+            CreatedAt = CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
+            UpdatedAt = UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss"),
+        };
     }
 }

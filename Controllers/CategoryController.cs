@@ -19,9 +19,9 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
         var insertedCategory = await _categoriesRepository.CreateAsync(
             categoryCreateRequestDto.GetModel()
         );
-        var response = new GenericResponse<CategoryResponseDto>(
+        var response = new GenericResponse<CategoryResponseSimpleDto>(
             insertedCategory != null,
-            insertedCategory?.GetDto()
+            insertedCategory?.GetSimpleDto()
         );
         return Ok(response);
     }
@@ -30,9 +30,9 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     public async Task<IActionResult> Index()
     {
         var categories = await _categoriesRepository.IndexAsync();
-        var response = new GenericResponse<List<CategoryResponseDto>>(
+        var response = new GenericResponse<List<CategoryResponseSimpleDto>>(
             true,
-            [.. categories.Select(c => c.GetDto())]
+            [.. categories.Select(c => c.GetSimpleDto())]
         );
         return Ok(response);
     }
@@ -41,9 +41,9 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     public async Task<IActionResult> Find([FromRoute] int id)
     {
         var category = await _categoriesRepository.FindAsync((uint)id);
-        var response = new GenericResponse<CategoryResponseDto?>(
+        var response = new GenericResponse<CategoryResponseSimpleDto?>(
             category != null,
-            category?.GetDto()
+            category?.GetSimpleDto()
         );
         return Ok(response);
     }
@@ -55,7 +55,10 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     )
     {
         var result = await _categoriesRepository.UpdateAsync(id, categoryUpdateRequestDto);
-        var response = new GenericResponse<CategoryResponseDto?>(result != null, result?.GetDto());
+        var response = new GenericResponse<CategoryResponseSimpleDto?>(
+            result != null,
+            result?.GetSimpleDto()
+        );
         return Ok(response);
     }
 
@@ -63,7 +66,10 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     public async Task<IActionResult> Delete(int id)
     {
         var result = await _categoriesRepository.DeleteAsync(id);
-        var response = new GenericResponse<CategoryResponseDto?>(result != null, result?.GetDto());
+        var response = new GenericResponse<CategoryResponseSimpleDto?>(
+            result != null,
+            result?.GetSimpleDto()
+        );
         return Ok(response);
     }
 

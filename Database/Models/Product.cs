@@ -26,17 +26,31 @@ public class Product : BaseModel
 
     public ICollection<Tag> Tags { get; set; } = [];
 
-    public ProductResponseDto GetDto()
+    public ProductResponseSimpleDto GetSimpleDto()
     {
-        return new ProductResponseDto(
-            Id: Id,
-            Name: Name,
-            Price: Price,
-            Description: Description,
-            Category: Category?.GetDto(),
-            Tags: [.. Tags.Select(t => t.GetDto())],
-            CreatedAt: CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
-            UpdatedAt: UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss")
-        );
+        return new ProductResponseSimpleDto()
+        {
+            Id = Id,
+            Name = Name,
+            Description = Description,
+            Price = Price,
+            CreatedAt = CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
+            UpdatedAt = UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss"),
+        };
+    }
+
+    public ProductResponseFullDto GetFullDto()
+    {
+        return new ProductResponseFullDto()
+        {
+            Id = Id,
+            Name = Name,
+            Price = Price,
+            Description = Description,
+            Category = Category?.GetSimpleDto(),
+            Tags = [.. Tags.Select(t => t.GetSimpleDto())],
+            CreatedAt = CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
+            UpdatedAt = UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss"),
+        };
     }
 }
