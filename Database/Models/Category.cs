@@ -22,6 +22,7 @@ public class Category : BaseModel
             Id = Id,
             Name = Name,
             Description = Description,
+            ProductsCount = Products.Count,
             CreatedAt = CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
             UpdatedAt = UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss"),
         };

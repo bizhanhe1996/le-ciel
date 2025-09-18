@@ -1,5 +1,4 @@
-- add Simple and Full version of ResponseDTOs to prevent circular reference
-- add many2many relationship to tag and product
+- categoty updatedAt bug!
 - add depth to categories
 - add users
 - add authorizae and authenticate

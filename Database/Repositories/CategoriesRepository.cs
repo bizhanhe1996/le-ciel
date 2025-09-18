@@ -17,19 +17,27 @@ public class CategoriesRepository(AppContext context) : BaseRepository
 
     public async Task<List<Category>> IndexAsync()
     {
-        var categories = await _context.Categories.ToListAsync();
+        var categories = await _context
+            .Categories.Include(c => c.Products)
+            .AsNoTracking()
+            .ToListAsync();
         return categories;
     }
 
     public async Task<Category?> FindAsync(uint id)
     {
-        var category = await _context.Categories.FindAsync(id);
+        var category = await _context
+            .Categories.Include(c => c.Products)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id);
         return category;
     }
 
     public async Task<Category?> UpdateAsync(int id, CategoryUpdateRequestDto dto)
     {
-        var category = await FindAsync((uint)id);
+        var category = await _context
+            .Categories.Include(c => c.Products)
+            .FirstOrDefaultAsync(c => c.Id == id);
         if (category == null)
         {
             return null;
@@ -42,7 +50,9 @@ public class CategoriesRepository(AppContext context) : BaseRepository
 
     public async Task<Category?> DeleteAsync(int id)
     {
-        var category = await FindAsync((uint)id);
+        var category = await _context
+            .Categories.Include(c => c.Products)
+            .FirstOrDefaultAsync(c => c.Id == id);
         if (category == null)
         {
             return null;
@@ -54,7 +64,10 @@ public class CategoriesRepository(AppContext context) : BaseRepository
 
     public async Task<ICollection<Product>?> ProductsAsync(int id)
     {
-        var category = await FindAsync((uint)id);
+        var category = await _context
+            .Categories.Include(c => c.Products)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == id);
         if (category == null)
         {
             return null;

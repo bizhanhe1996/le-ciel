@@ -20,7 +20,7 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
             categoryCreateRequestDto.GetModel()
         );
         var response = new GenericResponse<CategoryResponseSimpleDto>(
-            insertedCategory != null,
+            insertedCategory is not null,
             insertedCategory?.GetSimpleDto()
         );
         return Ok(response);
@@ -42,7 +42,7 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     {
         var category = await _categoriesRepository.FindAsync((uint)id);
         var response = new GenericResponse<CategoryResponseSimpleDto?>(
-            category != null,
+            category is not null,
             category?.GetSimpleDto()
         );
         return Ok(response);
@@ -56,28 +56,31 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     {
         var result = await _categoriesRepository.UpdateAsync(id, categoryUpdateRequestDto);
         var response = new GenericResponse<CategoryResponseSimpleDto?>(
-            result != null,
+            result is not null,
             result?.GetSimpleDto()
         );
         return Ok(response);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         var result = await _categoriesRepository.DeleteAsync(id);
         var response = new GenericResponse<CategoryResponseSimpleDto?>(
-            result != null,
+            result is not null,
             result?.GetSimpleDto()
         );
         return Ok(response);
     }
 
     [HttpGet("products/{id}")]
-    public async Task<IActionResult> Products(int id)
+    public async Task<IActionResult> Products([FromRoute] int id)
     {
         var result = await _categoriesRepository.ProductsAsync(id);
-        var response = new GenericResponse<ICollection<Product>?>(true, result);
+        var response = new GenericResponse<ICollection<ProductResponseSimpleDto>?>(
+            result is not null,
+            [.. result.Select(p => p.GetSimpleDto())]
+        );
         return Ok(response);
     }
 }
