@@ -1,4 +1,6 @@
-- categoty updatedAt bug!
+- manual check all endpoints
+- add productsCoutn to TagSimpleDto
+- updateadAt of Product update
 - add depth to categories
 - add users
 - add authorizae and authenticate

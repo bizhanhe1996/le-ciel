@@ -48,6 +48,7 @@ public class ProductsRepository(AppContext context) : BaseRepository
     {
         var product = await _context
             .Products.Include(p => p.Tags)
+            .Include(p => p.Category)
             .FirstOrDefaultAsync(p => p.Id == id);
         if (product == null)
         {
@@ -67,7 +68,10 @@ public class ProductsRepository(AppContext context) : BaseRepository
 
     public async Task<Product?> DeleteAsync(uint id)
     {
-        var product = await _context.Products.FindAsync(id);
+        var product = await _context
+            .Products.Include(p => p.Category)
+            .Include(p => p.Tags)
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (product == null)
         {
             return null;

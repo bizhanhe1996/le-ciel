@@ -11,14 +11,16 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     private readonly ProductsRepository _productsRepository = productsRepository;
 
     [HttpPost]
-    public async Task<IActionResult> Create(ProductCreateRequestDto productCreateRequestDto)
+    public async Task<IActionResult> Create(
+        [FromBody] ProductCreateRequestDto productCreateRequestDto
+    )
     {
         var insertedProduct = await _productsRepository.CreateAsync(
             productCreateRequestDto.GetModel()
         );
-        var response = new GenericResponse<ProductResponseSimpleDto>(
-            insertedProduct != null,
-            insertedProduct?.GetSimpleDto()
+        var response = new GenericResponse<ProductResponseFullDto?>(
+            insertedProduct is not null,
+            insertedProduct?.GetFullDto()
         );
         return Ok(response);
     }
@@ -38,9 +40,9 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     public async Task<IActionResult> Find([FromRoute] uint id)
     {
         var product = await _productsRepository.FindAsync(id);
-        var response = new GenericResponse<ProductResponseSimpleDto?>(
-            product != null,
-            product?.GetSimpleDto()
+        var response = new GenericResponse<ProductResponseFullDto?>(
+            product is not null,
+            product?.GetFullDto()
         );
         return Ok(response);
     }
@@ -52,20 +54,20 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     )
     {
         var result = await _productsRepository.UpdateAsync(id, productUpdateRequestDto);
-        var reponse = new GenericResponse<ProductResponseSimpleDto?>(
-            result != null,
-            result?.GetSimpleDto()
+        var reponse = new GenericResponse<ProductResponseFullDto?>(
+            result is not null,
+            result?.GetFullDto()
         );
         return Ok(reponse);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(uint id)
+    public async Task<IActionResult> Delete([FromRoute] uint id)
     {
         var result = await _productsRepository.DeleteAsync(id);
-        var response = new GenericResponse<ProductResponseSimpleDto?>(
+        var response = new GenericResponse<ProductResponseFullDto?>(
             result is not null,
-            result?.GetSimpleDto()
+            result?.GetFullDto()
         );
         return Ok(response);
     }
