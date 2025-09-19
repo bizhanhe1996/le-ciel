@@ -31,7 +31,7 @@ public class Paginator
         return this;
     }
 
-    private void _allRecords()
+    private void AllRecords()
     {
         PaginationStruct.Page = 1;
         PaginationStruct.Pages = 1;
@@ -40,10 +40,37 @@ public class Paginator
         TakeCount = _totalCount;
     }
 
-    private void _limitedRecords()
+    private void LimitedRecords()
+    {
+        SetPagesCount();
+        SetPage();
+        FillInPaginationStruct();
+        SkipCount = (_page - 1) * _size;
+        TakeCount = _size;
+    }
+
+    private void FillInPaginationStruct()
+    {
+        PaginationStruct.Page = _page;
+        PaginationStruct.Pages = _pagesCount;
+        PaginationStruct.PageSize = _size;
+    }
+
+    private void SetPage()
+    {
+        if (_page <= 1)
+        {
+            _page = 1;
+        }
+        if (_page > _pagesCount)
+        {
+            _page = _pagesCount;
+        }
+    }
+
+    private void SetPagesCount()
     {
         float pagesCountFloat = (float)_totalCount / _size;
-
         if (pagesCountFloat < 1)
         {
             _pagesCount = 1;
@@ -56,35 +83,21 @@ public class Paginator
         {
             _pagesCount = (int)Math.Ceiling(pagesCountFloat);
         }
-
         if (_pagesCount == 0)
         {
             _pagesCount = 1;
         }
-        if (_page <= 1)
-        {
-            _page = 1;
-        }
-        if (_page > _pagesCount)
-        {
-            _page = _pagesCount;
-        }
-        PaginationStruct.Page = _page;
-        PaginationStruct.Pages = _pagesCount;
-        PaginationStruct.PageSize = _size;
-        SkipCount = (_page - 1) * _size;
-        TakeCount = _size;
     }
 
     public void Run()
     {
         if (_size == -1)
         {
-            _allRecords();
+            AllRecords();
         }
         else
         {
-            _limitedRecords();
+            LimitedRecords();
         }
     }
 }

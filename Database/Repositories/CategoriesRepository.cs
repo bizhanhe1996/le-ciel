@@ -17,7 +17,7 @@ public class CategoriesRepository(AppContext context, Paginator paginator)
 
     public async Task<List<Category>> IndexAsync(int page = 1, int pageSize = 10)
     {
-        int totalCount = _context.Products.Count();
+        int totalCount = _context.Categories.Count();
         _paginator.SetTotalCount(totalCount).SetPage(page).SetSize(pageSize).Run();
 
         var categories = await _context

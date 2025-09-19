@@ -17,7 +17,7 @@ public class TagsRepository(AppContext context, Paginator paginator)
 
     public async Task<List<Tag>> IndexAsync(int page = 1, int pageSize = 10)
     {
-        int totalCount = _context.Products.Count();
+        int totalCount = _context.Tags.Count();
         _paginator.SetTotalCount(totalCount).SetPage(page).SetSize(pageSize).Run();
 
         var tags = await _context
