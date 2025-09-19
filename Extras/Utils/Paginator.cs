@@ -78,13 +78,11 @@ public class Paginator
 
     public void Run()
     {
-        _limitedRecords();
-        return;
         if (_size == -1)
         {
             _allRecords();
         }
-        else if (_size >= 10 && _size <= 50)
+        else
         {
             _limitedRecords();
         }

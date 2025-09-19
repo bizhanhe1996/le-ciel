@@ -15,9 +15,18 @@ public class TagsRepository(AppContext context, Paginator paginator)
         return insertedResult.Entity;
     }
 
-    public async Task<List<Tag>> IndexAsync()
+    public async Task<List<Tag>> IndexAsync(int page = 1, int pageSize = 10)
     {
-        var tags = await _context.Tags.Include(t => t.Products).AsNoTracking().ToListAsync();
+        int totalCount = _context.Products.Count();
+        _paginator.SetTotalCount(totalCount).SetPage(page).SetSize(pageSize).Run();
+
+        var tags = await _context
+            .Tags.OrderBy(t => t.Id)
+            .Skip(_paginator.SkipCount)
+            .Take(_paginator.TakeCount)
+            .Include(t => t.Products)
+            .AsNoTracking()
+            .ToListAsync();
         return tags;
     }
 

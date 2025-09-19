@@ -6,5 +6,5 @@ public class GenericResponse<T>(bool status, T? payload, PaginationStruct? pagin
 {
     public bool Status { get; set; } = status;
     public T? Payload { get; set; } = payload;
-    public PaginationStruct? Pagination = pagination;
+    public PaginationStruct? Pagination { get; set; } = pagination;
 }

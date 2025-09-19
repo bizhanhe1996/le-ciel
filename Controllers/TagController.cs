@@ -24,12 +24,13 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var tags = await _tagsRepository.IndexAsync();
+        var tags = await _tagsRepository.IndexAsync(page, pageSize);
         var response = new GenericResponse<List<TagResponseSimpleDto>?>(
             true,
-            [.. tags.Select(t => t.GetSimpleDto())]
+            [.. tags.Select(t => t.GetSimpleDto())],
+            _tagsRepository.PaginationStruct
         );
         return Ok(response);
     }

@@ -15,10 +15,16 @@ public class CategoriesRepository(AppContext context, Paginator paginator)
         return insertedCategory.Entity;
     }
 
-    public async Task<List<Category>> IndexAsync()
+    public async Task<List<Category>> IndexAsync(int page = 1, int pageSize = 10)
     {
+        int totalCount = _context.Products.Count();
+        _paginator.SetTotalCount(totalCount).SetPage(page).SetSize(pageSize).Run();
+
         var categories = await _context
-            .Categories.Include(c => c.Products)
+            .Categories.OrderBy(c => c.Id)
+            .Skip(_paginator.SkipCount)
+            .Take(_paginator.TakeCount)
+            .Include(c => c.Products)
             .AsNoTracking()
             .ToListAsync();
         return categories;

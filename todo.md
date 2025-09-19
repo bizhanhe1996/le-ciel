@@ -1,5 +1,6 @@
 - add IRepository and apply it
-- pagination debug and application
+- wrap inside try / catch for unique indexes
+- pagination application
 - updateadAt bug!
 - add depth to categories: recursive relationship
 - add users: login, logout, cart

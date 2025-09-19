@@ -26,12 +26,13 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var categories = await _categoriesRepository.IndexAsync();
+        var categories = await _categoriesRepository.IndexAsync(page, pageSize);
         var response = new GenericResponse<List<CategoryResponseSimpleDto>>(
             true,
-            [.. categories.Select(c => c.GetSimpleDto())]
+            [.. categories.Select(c => c.GetSimpleDto())],
+            _categoriesRepository.PaginationStruct
         );
         return Ok(response);
     }
