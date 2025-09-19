@@ -4,6 +4,7 @@ using System.Text;
 using LeCiel.Database;
 using LeCiel.Database.Models;
 using LeCiel.Database.Repositories;
+using LeCiel.Extras.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,7 @@ public static class Program
         builder.Services.AddScoped<ProductsRepository>();
         builder.Services.AddScoped<CategoriesRepository>();
         builder.Services.AddScoped<TagsRepository>();
+        builder.Services.AddSingleton<Paginator>();
     }
 
     private static void AddSwagger()

@@ -1,13 +1,13 @@
 using LeCiel.Database.Models;
 using LeCiel.DTOs.Requests;
+using LeCiel.Extras.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Repositories;
 
-public class CategoriesRepository(AppContext context) : BaseRepository
+public class CategoriesRepository(AppContext context, Paginator paginator)
+    : BaseRepository(context, paginator)
 {
-    private readonly AppContext _context = context;
-
     public async Task<Category> CreateAsync(Category category)
     {
         var insertedCategory = _context.Categories.Add(category);

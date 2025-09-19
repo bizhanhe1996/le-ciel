@@ -26,12 +26,13 @@ public class ProductController(ProductsRepository productsRepository) : BaseCont
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var products = await _productsRepository.IndexAsync();
+        var products = await _productsRepository.IndexAsync(page, pageSize);
         var response = new GenericResponse<List<ProductResponseSimpleDto>>(
             true,
-            [.. products.Select(p => p.GetSimpleDto())]
+            [.. products.Select(p => p.GetSimpleDto())],
+            _productsRepository.PaginationStruct
         );
         return Ok(response);
     }

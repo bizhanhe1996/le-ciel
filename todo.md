@@ -1,8 +1,7 @@
-- manual check all endpoints
-- add productsCoutn to TagSimpleDto
-- updateadAt of Product update
-- add depth to categories
-- add users
+- add IRepository and apply it
+- pagination debug and application
+- updateadAt bug!
+- add depth to categories: recursive relationship
+- add users: login, logout, cart
 - add authorizae and authenticate
 - add SwaggerUI Annotations
-- add pagination and sort by

@@ -1,13 +1,15 @@
 using LeCiel.Database.Models;
 using LeCiel.DTOs.Requests;
+using LeCiel.Extras.Interfaces;
+using LeCiel.Extras.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Repositories;
 
-public class ProductsRepository(AppContext context) : BaseRepository
+public class ProductsRepository(AppContext context, Paginator paginator)
+    : BaseRepository(context, paginator),
+        IRepository
 {
-    private readonly AppContext _context = context;
-
     public async Task<Product?> CreateAsync(Product product)
     {
         if (product.TagsIds is not null)
@@ -22,11 +24,18 @@ public class ProductsRepository(AppContext context) : BaseRepository
         return insertionResult.Entity;
     }
 
-    public async Task<List<Product>> IndexAsync()
+    public async Task<List<Product>> IndexAsync(int page = 1, int pageSize = 10)
     {
+        int totalCount = _context.Products.Count();
+        _paginator.SetTotalCount(totalCount).SetPage(page).SetSize(pageSize).Run();
+
         var products = await _context
-            .Products.Include(p => p.Category)
+            .Products.OrderBy(p => p.Id)
+            .Skip(_paginator.SkipCount)
+            .Take(_paginator.TakeCount)
+            .Include(p => p.Category)
             .Include(p => p.Tags)
+            .AsNoTracking()
             .ToListAsync();
         return products;
     }

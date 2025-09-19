@@ -1,13 +1,13 @@
 using LeCiel.Database.Models;
 using LeCiel.DTOs.Requests;
+using LeCiel.Extras.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Repositories;
 
-public class TagsRepository(AppContext context) : BaseRepository
+public class TagsRepository(AppContext context, Paginator paginator)
+    : BaseRepository(context, paginator)
 {
-    private readonly AppContext _context = context;
-
     public async Task<Tag?> CreateAsync(Tag tag)
     {
         var insertedResult = _context.Tags.Add(tag);
@@ -17,19 +17,22 @@ public class TagsRepository(AppContext context) : BaseRepository
 
     public async Task<List<Tag>> IndexAsync()
     {
-        var tags = await _context.Tags.ToListAsync();
+        var tags = await _context.Tags.Include(t => t.Products).AsNoTracking().ToListAsync();
         return tags;
     }
 
     public async Task<Tag?> FindAsync(uint id)
     {
-        var tag = await _context.Tags.FindAsync(id);
+        var tag = await _context
+            .Tags.Include(t => t.Products)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Id == id);
         return tag;
     }
 
     public async Task<Tag?> UpdateAsync(uint id, TagUpdateRequestDto dto)
     {
-        var tag = await _context.Tags.FindAsync(id);
+        var tag = await _context.Tags.Include(t => t.Products).FirstOrDefaultAsync(t => t.Id == id);
         if (tag == null)
         {
             return null;

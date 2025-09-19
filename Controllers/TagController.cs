@@ -1,6 +1,7 @@
 using LeCiel.Database.Repositories;
 using LeCiel.DTOs.Requests;
 using LeCiel.DTOs.Responses;
+using LeCiel.Extras.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
@@ -15,9 +16,9 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     public async Task<IActionResult> Create([FromBody] TagCreateRequestDto dto)
     {
         var insertedTag = await _tagsRepository.CreateAsync(dto.GetModel());
-        var response = new GenericResponse<TagResponseSimpleDto>(
-            insertedTag != null,
-            insertedTag?.GetSimpleDto()
+        var response = new GenericResponse<TagResponseFullDto?>(
+            insertedTag is not null,
+            insertedTag?.GetFullDto()
         );
         return Ok(response);
     }
@@ -37,9 +38,9 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     public async Task<IActionResult> Find([FromRoute] uint id)
     {
         var result = await _tagsRepository.FindAsync(id);
-        var response = new GenericResponse<TagResponseSimpleDto?>(
-            result != null,
-            result?.GetSimpleDto()
+        var response = new GenericResponse<TagResponseFullDto?>(
+            result is not null,
+            result?.GetFullDto()
         );
         return Ok(response);
     }
@@ -48,9 +49,9 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     public async Task<IActionResult> Update([FromRoute] uint id, [FromBody] TagUpdateRequestDto dto)
     {
         var result = await _tagsRepository.UpdateAsync(id, dto);
-        var response = new GenericResponse<TagResponseSimpleDto?>(
-            result != null,
-            result?.GetSimpleDto()
+        var response = new GenericResponse<TagResponseFullDto?>(
+            result is not null,
+            result?.GetFullDto()
         );
         return Ok(response);
     }
@@ -59,9 +60,9 @@ public class TagController(TagsRepository tagsRepository) : BaseController
     public async Task<IActionResult> Delete([FromRoute] uint id)
     {
         var result = await _tagsRepository.DeleteAsync(id);
-        var response = new GenericResponse<TagResponseSimpleDto?>(
-            result != null,
-            result?.GetSimpleDto()
+        var response = new GenericResponse<TagResponseFullDto?>(
+            result is not null,
+            result?.GetFullDto()
         );
         return Ok(response);
     }

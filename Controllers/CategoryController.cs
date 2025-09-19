@@ -1,4 +1,3 @@
-using LeCiel.Database.Models;
 using LeCiel.Database.Repositories;
 using LeCiel.DTOs.Requests;
 using LeCiel.DTOs.Responses;
