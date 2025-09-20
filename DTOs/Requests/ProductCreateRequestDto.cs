@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using LeCiel.Extras.Attributes;
+using LeCiel.Extras.Interfaces;
 
 namespace LeCiel.DTOs.Requests;
 
-public record ProductCreateRequestDto
+public record ProductCreateRequestDto : IRequestDto
 {
     [Required]
     [MaxLength(128)]

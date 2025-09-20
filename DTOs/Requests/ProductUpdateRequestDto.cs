@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using LeCiel.Database.Models;
 using LeCiel.Extras.Attributes;
+using LeCiel.Extras.Interfaces;
 
 namespace LeCiel.DTOs.Requests;
 
-public record ProductUpdateRequestDto
+public record ProductUpdateRequestDto : IRequestDto
 {
     [MaxLength(128)]
     public string? Name { get; init; }
@@ -19,5 +19,4 @@ public record ProductUpdateRequestDto
 
     [TagIdsExistAttribute]
     public uint[]? TagsIds { get; init; }
-
 }

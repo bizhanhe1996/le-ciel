@@ -6,10 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Repositories;
 
-public class ProductsRepository(AppContext context, Paginator paginator)
-    : BaseRepository(context, paginator),
-        IRepository
+public class ProductsRepository : BaseRepository, IRepository<Product, ProductUpdateRequestDto>
 {
+    public ProductsRepository(AppContext context, Paginator paginator)
+        : base(context, paginator) { }
+
     public async Task<Product?> CreateAsync(Product product)
     {
         if (product.TagsIds is not null)
@@ -19,9 +20,16 @@ public class ProductsRepository(AppContext context, Paginator paginator)
                 .ToListAsync();
             ;
         }
-        var insertionResult = _context.Products.Add(product);
-        await _context.SaveChangesAsync();
-        return insertionResult.Entity;
+        try
+        {
+            var insertionResult = _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+            return insertionResult.Entity;
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     public async Task<List<Product>> IndexAsync(int page = 1, int pageSize = 10)

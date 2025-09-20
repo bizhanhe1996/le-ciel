@@ -1,8 +1,8 @@
-- add IRepository and apply it
-- wrap inside try / catch for unique indexes
-- pagination application
 - updateadAt bug!
+- add User Model with Identity
 - add depth to categories: recursive relationship
 - add users: login, logout, cart
 - add authorizae and authenticate
 - add SwaggerUI Annotations
+- add comment for products
+- add mojoodi for products

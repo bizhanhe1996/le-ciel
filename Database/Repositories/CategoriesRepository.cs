@@ -1,14 +1,17 @@
 using LeCiel.Database.Models;
 using LeCiel.DTOs.Requests;
+using LeCiel.Extras.Interfaces;
 using LeCiel.Extras.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Repositories;
 
-public class CategoriesRepository(AppContext context, Paginator paginator)
-    : BaseRepository(context, paginator)
+public class CategoriesRepository : BaseRepository, IRepository<Category, CategoryUpdateRequestDto>
 {
-    public async Task<Category> CreateAsync(Category category)
+    public CategoriesRepository(AppContext context, Paginator paginator)
+        : base(context, paginator) { }
+
+    public async Task<Category?> CreateAsync(Category category)
     {
         var insertedCategory = _context.Categories.Add(category);
         await _context.SaveChangesAsync();
@@ -39,7 +42,7 @@ public class CategoriesRepository(AppContext context, Paginator paginator)
         return category;
     }
 
-    public async Task<Category?> UpdateAsync(int id, CategoryUpdateRequestDto dto)
+    public async Task<Category?> UpdateAsync(uint id, CategoryUpdateRequestDto dto)
     {
         var category = await _context
             .Categories.Include(c => c.Products)
@@ -54,7 +57,7 @@ public class CategoriesRepository(AppContext context, Paginator paginator)
         return category;
     }
 
-    public async Task<Category?> DeleteAsync(int id)
+    public async Task<Category?> DeleteAsync(uint id)
     {
         var category = await _context
             .Categories.Include(c => c.Products)

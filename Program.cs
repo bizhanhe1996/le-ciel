@@ -5,6 +5,7 @@ using LeCiel.Database;
 using LeCiel.Database.Models;
 using LeCiel.Database.Repositories;
 using LeCiel.Extras.Utils;
+using LeCiel.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +57,11 @@ public static class Program
 
     private static void AddJwtBearer()
     {
-        var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
+        var jwtKey =
+            builder.Configuration["Jwt:Key"]
+            ?? throw new InvalidOperationException("JWT Key is missing in configuration.");
+
+        var key = Encoding.UTF8.GetBytes(jwtKey);
         builder
             .Services.AddAuthentication(options =>
             {
@@ -102,6 +107,7 @@ public static class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseHttpsRedirection();
+        app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
         app.MapControllers();
     }
 

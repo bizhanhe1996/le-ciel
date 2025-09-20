@@ -1,14 +1,22 @@
 using LeCiel.Database.Repositories;
 using LeCiel.DTOs.Requests;
 using LeCiel.DTOs.Responses;
+using LeCiel.Extras.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LeCiel.Controllers;
 
 [ApiController, Route("/api/[controller]")]
-public class CategoryController(CategoriesRepository categoriesRepository) : BaseController
+public class CategoryController
+    : BaseController,
+        IController<CategoryCreateRequestDto, CategoryUpdateRequestDto>
 {
-    private readonly CategoriesRepository _categoriesRepository = categoriesRepository;
+    private readonly CategoriesRepository _categoriesRepository;
+
+    public CategoryController(CategoriesRepository categoriesRepository)
+    {
+        _categoriesRepository = categoriesRepository;
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create(
@@ -38,9 +46,9 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Find([FromRoute] int id)
+    public async Task<IActionResult> Find([FromRoute] uint id)
     {
-        var category = await _categoriesRepository.FindAsync((uint)id);
+        var category = await _categoriesRepository.FindAsync(id);
         var response = new GenericResponse<CategoryResponseSimpleDto?>(
             category is not null,
             category?.GetSimpleDto()
@@ -50,7 +58,7 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
 
     [HttpPatch("{id}")]
     public async Task<IActionResult> Update(
-        [FromRoute] int id,
+        [FromRoute] uint id,
         [FromBody] CategoryUpdateRequestDto categoryUpdateRequestDto
     )
     {
@@ -63,7 +71,7 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
+    public async Task<IActionResult> Delete([FromRoute] uint id)
     {
         var result = await _categoriesRepository.DeleteAsync(id);
         var response = new GenericResponse<CategoryResponseSimpleDto?>(
@@ -79,7 +87,7 @@ public class CategoryController(CategoriesRepository categoriesRepository) : Bas
         var result = await _categoriesRepository.ProductsAsync(id);
         var response = new GenericResponse<ICollection<ProductResponseSimpleDto>?>(
             result is not null,
-            [.. result.Select(p => p.GetSimpleDto())]
+            result?.Select(p => p.GetSimpleDto()).ToList()
         );
         return Ok(response);
     }

@@ -1,13 +1,16 @@
 using LeCiel.Database.Models;
 using LeCiel.DTOs.Requests;
+using LeCiel.Extras.Interfaces;
 using LeCiel.Extras.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database.Repositories;
 
-public class TagsRepository(AppContext context, Paginator paginator)
-    : BaseRepository(context, paginator)
+public class TagsRepository : BaseRepository, IRepository<Tag, TagUpdateRequestDto>
 {
+    public TagsRepository(AppContext context, Paginator paginator)
+        : base(context, paginator) { }
+
     public async Task<Tag?> CreateAsync(Tag tag)
     {
         var insertedResult = _context.Tags.Add(tag);

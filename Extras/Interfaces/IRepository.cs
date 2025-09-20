@@ -2,11 +2,12 @@ using LeCiel.Database.Models;
 
 namespace LeCiel.Extras.Interfaces;
 
-public interface IRepository
+public interface IRepository<T, U>
+    where T : BaseModel
 {
-    // Task<BaseModel?> CreateAsync(BaseModel model);
-    // Task<List<BaseModel>> IndexAsync(int page, int pageSize);
-    // Task<BaseModel?> FindAsync(int id);
-    // Task<BaseModel?> UpdateAsync(int id, object dtoOrModel);
-    // Task<BaseModel?> DeleteAsync(int id);
+    Task<T?> CreateAsync(T model);
+    Task<List<T>> IndexAsync(int page, int pageSize);
+    Task<T?> FindAsync(uint id);
+    Task<T?> UpdateAsync(uint id, U dto);
+    Task<T?> DeleteAsync(uint id);
 };

@@ -1,14 +1,22 @@
 using LeCiel.Database.Repositories;
 using LeCiel.DTOs.Requests;
 using LeCiel.DTOs.Responses;
+using LeCiel.Extras.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LeCiel.Controllers;
 
 [ApiController, Route("api/[controller]")]
-public class ProductController(ProductsRepository productsRepository) : BaseController
+public class ProductController
+    : BaseController,
+        IController<ProductCreateRequestDto, ProductUpdateRequestDto>
 {
-    private readonly ProductsRepository _productsRepository = productsRepository;
+    private readonly ProductsRepository _productsRepository;
+
+    public ProductController(ProductsRepository productsRepository)
+    {
+        _productsRepository = productsRepository;
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create(

@@ -1,16 +1,20 @@
 using LeCiel.Database.Repositories;
 using LeCiel.DTOs.Requests;
 using LeCiel.DTOs.Responses;
-using LeCiel.Extras.Utils;
+using LeCiel.Extras.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace LeCiel.Controllers;
 
 [ApiController, Route("api/[controller]")]
-public class TagController(TagsRepository tagsRepository) : BaseController
+public class TagController : BaseController, IController<TagCreateRequestDto, TagUpdateRequestDto>
 {
-    private readonly TagsRepository _tagsRepository = tagsRepository;
+    private readonly TagsRepository _tagsRepository;
+
+    public TagController(TagsRepository tagsRepository)
+    {
+        _tagsRepository = tagsRepository;
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] TagCreateRequestDto dto)
