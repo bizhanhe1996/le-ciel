@@ -1,10 +1,13 @@
 using LeCiel.Database.Models;
+using LeCiel.Extras.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeCiel.Database;
 
-public class AppContext(DbContextOptions<AppContext> options) : IdentityDbContext<User>(options)
+public class AppContext(DbContextOptions<AppContext> options)
+    : IdentityDbContext<User, IdentityRole<uint>, uint>(options)
 {
     // DbSets
     public DbSet<Product> Products { get; set; }
@@ -25,10 +28,15 @@ public class AppContext(DbContextOptions<AppContext> options) : IdentityDbContex
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        AddUniqueIndexToUserPhoneNumber(modelBuilder);
         ProductCategoryOneToMany(modelBuilder);
         ProductTagManyToMany(modelBuilder);
+    }
 
-        base.OnModelCreating(modelBuilder);
+    private static void AddUniqueIndexToUserPhoneNumber(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>().HasIndex(u => u.PhoneNumber).IsUnique();
     }
 
     private static void ProductTagManyToMany(ModelBuilder modelBuilder)
@@ -59,7 +67,7 @@ public class AppContext(DbContextOptions<AppContext> options) : IdentityDbContex
         var targetStates = new[] { EntityState.Modified, EntityState.Added };
         var entries = ChangeTracker
             .Entries()
-            .Where(e => e.Entity is BaseModel && targetStates.Contains(e.State));
+            .Where(e => e.Entity is IModel && targetStates.Contains(e.State));
 
         foreach (var entityEntry in entries)
         {

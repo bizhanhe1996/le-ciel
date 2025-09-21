@@ -86,7 +86,13 @@ public static class Program
     private static void AddIdentity()
     {
         builder
-            .Services.AddIdentity<User, IdentityRole>()
+            .Services.AddIdentity<User, IdentityRole<uint>>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.User.RequireUniqueEmail = true;
+            })
             .AddEntityFrameworkStores<AppContext>()
             .AddDefaultTokenProviders();
     }

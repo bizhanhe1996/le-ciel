@@ -1,7 +1,6 @@
+- add User Model with Identity -> JWT
 - updateadAt bug!
-- add User Model with Identity
 - add depth to categories: recursive relationship
-- add users: login, logout, cart
 - add authorizae and authenticate
 - add SwaggerUI Annotations
 - add comment for products
